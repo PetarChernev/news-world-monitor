@@ -1,0 +1,6 @@
+fastapi
+uvicorn
+google-cloud-pubsub
+google-cloud-logging
+packaging
+requests

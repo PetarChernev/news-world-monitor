@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+google-cloud-firestore
+google-cloud-logging
+requests
+pycountry
+python-dateutil

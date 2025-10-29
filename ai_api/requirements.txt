@@ -1,0 +1,5 @@
+fastapi
+uvicorn
+google-cloud-aiplatform
+google-cloud-language
+openai>=1.0.0
