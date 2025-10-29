@@ -1,6 +1,8 @@
-.# Atlas News Intelligence — Monorepo
+## Atlas News Intelligence — Monorepo
 
 A multi-service GCP project that ingests fresh news from GDELT, extracts entities with AI, stores enriched records in Firestore, and visualizes global and per-country trends in a dashboard.
+
+Current deployment: https://news-atlas-1010480476071.europe-central2.run.app/
 
 It implements 4 GCP services:
 
