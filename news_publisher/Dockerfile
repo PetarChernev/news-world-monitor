@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.13-slim
 ENV PROJECT_ID=world-monitor
 ENV TOPIC_ID=news.raw
 

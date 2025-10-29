@@ -2,6 +2,7 @@ from datetime import datetime
 import json
 import os
 from typing import List, Optional, Literal, Dict
+import logging
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, constr, validator
@@ -11,9 +12,12 @@ from starlette.middleware.cors import CORSMiddleware
 import vertexai
 from vertexai.language_models import TextEmbeddingModel
 from openai import OpenAI
-
-# --- NEW: Cloud NL imports ---------------------------------------------------
+import google.cloud.logging
 from google.cloud import language_v1
+
+client = google.cloud.logging.Client()
+
+client.setup_logging()
 
 # --------------------------------------------------------------------------------------
 # Config
@@ -66,7 +70,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+try:
+    openai_client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+except KeyError as e:
+    logging.warning("OPENAI_API_KEY not set; /embed/gpt and /topics endpoints will fail.")
+    openai_client = None
 
 # --------------------------------------------------------------------------------------
 # Schemas
@@ -340,9 +348,18 @@ def entities(payload: EntitiesRequest):
     )
 
 
-
 @app.post("/topics")
 def extract_topics(req: TopicBatchRequest):
+    """
+    CURRENTLY UNUSED.
+
+    Given a batch of headline texts and pre-extracted entities,
+    uses the LLM to extract topics per headline.
+    Returns a list of topic objects per headline.
+    
+    Cuurently we just take the entities in the text as topics,
+    so this is left here for future reference.
+    """
     # Build the user prompt from the incoming batch
     user_prompt = _build_user_prompt_block(req.items)
 

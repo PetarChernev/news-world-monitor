@@ -127,6 +127,12 @@ That writes ADC to your local gcloud config such that Google client libraries wi
 
 > You must have the IAM role **Service Account Token Creator** (or equivalent) on the target SA to impersonate it.
 
+In any case, either you or the service you are impersonating should be able to submit builds. You can give ourself build permissions by running:
+
+```
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID  --member="user:YOUR_EMAIL$"  --role="roles/cloudbuild.builds.builder"
+```
+
 ### Run services locally
 
 > From the repo root unless otherwise noted.
@@ -156,7 +162,7 @@ python app.py
 
 ## Deployment
 
-Each service is packaged as a Docker image. Every service folder contains a `build.sh` that performs idempotent setup and deployment.
+Each service is packaged as a Docker image. Every service folder contains a `build.sh` that performs idempotent setup and deployment. There is a root level `deploy.sh` script which deploys all 4 services consecutively.
 
 ### What the `build.sh` scripts do
 
@@ -178,28 +184,13 @@ Per service, the scripts will typically:
 
    > The scripts are idempotent: re-running them won’t recreate resources unnecessarily.
 
-### Per-service deploy
+### Deploy
 
 From the repo root:
 
-```bash
-cd ai_api
-./build.sh
+```
+bash deploy.sh 
 ```
 
-```bash
-cd news_publisher
-./build.sh
-```
+In each service directory, there is an individual deploy script which deploys just that service.
 
-```bash
-cd news_processor
-./build.sh
-```
-
-```bash
-cd atlas
-./build.sh
-```
-
-> Consult each folder’s `build.sh` for service-specific flags (e.g., region, min instances).
